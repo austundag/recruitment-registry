@@ -7,7 +7,7 @@ const shared = require('./shared.js');
 exports.createProfileSurvey = function createProfileSurvey(req, res) {
     req.models.profileSurvey.createProfileSurvey(req.body)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getProfileSurvey = function getProfileSurvey(req, res) {
@@ -18,23 +18,23 @@ exports.getProfileSurvey = function getProfileSurvey(req, res) {
     options.isIdentifying = true;
     req.models.profileSurvey.getProfileSurvey(options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.createProfileSurveyId = function createProfileSurveyId(req, res) {
     req.models.profileSurvey.createProfileSurveyId(req.body.profileSurveyId)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getProfileSurveyId = function getProfileSurveyId(req, res) {
     req.models.profileSurvey.getProfileSurveyId()
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteProfileSurveyId = function deleteProfileSurveyId(req, res) {
     req.models.profileSurvey.deleteProfileSurveyId()
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

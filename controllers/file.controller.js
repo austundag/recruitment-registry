@@ -10,7 +10,7 @@ exports.createFile = function createFile(req, res) {
     const name = _.get(req, 'swagger.params.filename.value');
     req.models.file.createFile(userId, { name, content: content.buffer })
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getFile = function getFile(req, res) {
@@ -22,12 +22,12 @@ exports.getFile = function getFile(req, res) {
             res.type('application/octet-stream');
             res.status(200).end(content, 'binary');
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listFiles = function listFiles(req, res) {
     const userId = req.user.id;
     req.models.file.listFiles(userId)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

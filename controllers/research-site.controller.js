@@ -7,28 +7,28 @@ const shared = require('./shared.js');
 exports.createResearchSite = function createResearchSite(req, res) {
     req.models.researchSite.createResearchSite(req.body)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getResearchSite = function getResearchSite(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.researchSite.getResearchSite(id)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.patchResearchSite = function patchResearchSite(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.researchSite.patchResearchSite(id, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteResearchSite = function deleteResearchSite(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.researchSite.deleteResearchSite(id)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listResearchSites = function listResearchSites(req, res) {
@@ -36,7 +36,7 @@ exports.listResearchSites = function listResearchSites(req, res) {
     const options = nearZip ? { nearZip } : {};
     req.models.researchSite.listResearchSites(options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.createResearchSiteVicinity = function createResearchSiteVicinity(req, res) {
@@ -44,5 +44,5 @@ exports.createResearchSiteVicinity = function createResearchSiteVicinity(req, re
     const zipCodes = req.body.zipCodes;
     req.models.researchSite.createResearchSiteVicinity(id, zipCodes)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

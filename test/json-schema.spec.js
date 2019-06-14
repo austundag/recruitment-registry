@@ -27,10 +27,12 @@ describe('json schema validations', () => {
         status(statusCode) { lastStatusCode = statusCode; return this; },
         json(err) { lastErr = err; },
     };
-    i18n.init({}, res);
 
     it('invalid object key', () => {
-        const r = js('newSurveyXXX', { a: 1 }, res);
+        const r = js('newSurveyXXX', {
+            body: { a: 1 },
+            i18n,
+        }, res);
         expect(r).to.equal(false, 'invalid key no error');
         expect(lastErr).to.have.property('message');
         expect(lastStatusCode).to.equal(500);
@@ -43,7 +45,10 @@ describe('json schema validations', () => {
             const valids = require(`./fixtures/valids/${kebabObjectType}`); // eslint-disable-line global-require, import/no-dynamic-require
 
             valids.forEach((valid) => {
-                const r = js(objectType, valid, res);
+                const r = js(objectType, {
+                    body: valid,
+                    i18n,
+                }, res);
                 if (!r) {
                     console.log(valid);
                 }
@@ -53,7 +58,10 @@ describe('json schema validations', () => {
             const invalids = require(`./fixtures/json-schema-invalid/${kebabObjectType}`); // eslint-disable-line global-require, import/no-dynamic-require
 
             invalids.forEach((invalid) => {
-                const r = js(objectType, invalid, res);
+                const r = js(objectType, {
+                    body: invalid,
+                    i18n,
+                }, res);
                 expect(r).to.equal(false, JSON.stringify(invalid, undefined, 4));
                 expect(lastErr).to.have.property('message');
                 expect(lastErr).to.have.property('detail');

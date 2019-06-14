@@ -15,7 +15,7 @@ exports.createSignature = function createSignature(req, res) {
     };
     req.models.consentSignature.createSignature(signature)
         .then(({ id }) => res.status(201).json({ id }))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.bulkCreateSignatures = function bulkCreateSignatures(req, res) {
@@ -28,12 +28,12 @@ exports.bulkCreateSignatures = function bulkCreateSignatures(req, res) {
     };
     req.models.consentSignature.bulkCreateSignatures(input.consentDocumentIds, common)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getSignatureHistory = function getSignatureHistory(req, res) {
     const userId = _.get(req, 'swagger.params.user-id.value');
     req.models.consentSignature.getSignatureHistory(userId)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

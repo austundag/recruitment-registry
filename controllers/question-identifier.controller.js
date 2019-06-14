@@ -9,5 +9,5 @@ exports.getQuestionIdByIdentifier = function getQuestionIdByIdentifier(req, res)
     const identifier = _.get(req, 'swagger.params.identifier.value');
     req.models.questionIdentifier.getQuestionIdByIdentifier(type, identifier)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

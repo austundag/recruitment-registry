@@ -9,7 +9,7 @@ exports.createSmtp = function createSmtp(req, res) {
     const smtp = Object.assign({ type }, req.body);
     req.models.smtp.createSmtp(smtp)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getSmtp = function getSmtp(req, res) {
@@ -24,7 +24,7 @@ exports.getSmtp = function getSmtp(req, res) {
                 res.status(200).json({ exists: false });
             }
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.updateSmtpText = function updateSmtpText(req, res) {
@@ -33,12 +33,12 @@ exports.updateSmtpText = function updateSmtpText(req, res) {
     const smtp = Object.assign({ type }, req.body);
     req.models.smtp.updateSmtpText(smtp, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteSmtp = function deleteSmtp(req, res) {
     const type = _.get(req, 'swagger.params.type.value');
     req.models.smtp.deleteSmtp(type)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

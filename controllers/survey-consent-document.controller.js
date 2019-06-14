@@ -16,5 +16,5 @@ exports.listSurveyConsentDocuments = function listSurveyConsentDocuments(req, re
     };
     req.models.surveyConsentDocument.listSurveyConsentDocuments(params, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

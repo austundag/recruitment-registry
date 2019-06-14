@@ -13,38 +13,38 @@ exports.getSurvey = function getSurvey(req, res) {
     options.admin = (req.user.role === 'admin');
     req.models.survey.getSurvey(id, options)
         .then(survey => res.status(200).json(survey))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.createSurvey = function createSurvey(req, res) {
-    if (!jsonSchema('newSurvey', req.body, res)) {
+    if (!jsonSchema('newSurvey', req, res)) {
         return;
     }
     const userId = req.user.id;
     req.models.survey.createOrReplaceSurvey(req.body, userId)
         .then(id => res.status(201).json({ id }))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.patchSurveyText = function patchSurveyText(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.survey.patchSurveyText(req.body, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.patchSurvey = function patchSurvey(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.survey.patchSurvey(id, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteSurvey = function deleteSurvey(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.survey.deleteSurvey(id)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listSurveys = function listSurveys(req, res) {
@@ -55,7 +55,7 @@ exports.listSurveys = function listSurveys(req, res) {
     options.admin = (req.user.role === 'admin');
     req.models.survey.listSurveys(options)
         .then(surveys => res.status(200).json(surveys))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getAnsweredSurvey = function getAnsweredSurvey(req, res) {
@@ -72,7 +72,7 @@ exports.getAnsweredSurvey = function getAnsweredSurvey(req, res) {
     options.admin = (req.user.role === 'admin');
     req.models.survey.getAnsweredSurvey(userId, id, options)
         .then(survey => res.status(200).json(survey))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.exportSurveys = function exportSurveys(req, res) {
@@ -82,7 +82,7 @@ exports.exportSurveys = function exportSurveys(req, res) {
             res.type('text/csv');
             res.status(200).send(csvContent);
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.importSurveys = function importSurveys(req, res) {
@@ -92,5 +92,5 @@ exports.importSurveys = function importSurveys(req, res) {
     const stream = intoStream(csvFile.buffer);
     req.models.survey.importSurveys(stream, { questionIdMap: idMap })
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

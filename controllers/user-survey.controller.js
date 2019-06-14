@@ -9,7 +9,7 @@ exports.getUserSurveyStatus = function getUserSurveyStatus(req, res) {
     const surveyId = _.get(req, 'swagger.params.id.value');
     req.models.userSurvey.getUserSurveyStatus(userId, surveyId)
         .then(result => res.status(200).json({ status: result }))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.createUserSurveyAnswers = function createUserSurveyAnswers(req, res) {
@@ -17,7 +17,7 @@ exports.createUserSurveyAnswers = function createUserSurveyAnswers(req, res) {
     const surveyId = _.get(req, 'swagger.params.id.value');
     req.models.userSurvey.createUserSurveyAnswers(userId, surveyId, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserSurveyAnswers = function getUserSurveyAnswers(req, res) {
@@ -30,7 +30,7 @@ exports.getUserSurveyAnswers = function getUserSurveyAnswers(req, res) {
     };
     req.models.userSurvey.getUserSurveyAnswers(userId, surveyId, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserSurvey = function getUserSurvey(req, res) {
@@ -41,7 +41,7 @@ exports.getUserSurvey = function getUserSurvey(req, res) {
     };
     req.models.userSurvey.getUserSurvey(userId, surveyId, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listUserSurveys = function listUserSurveys(req, res) {
@@ -50,5 +50,5 @@ exports.listUserSurveys = function listUserSurveys(req, res) {
     const options = { language };
     req.models.userSurvey.listUserSurveys(userId, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

@@ -16,21 +16,21 @@ exports.createNewUser = function createNewUser(req, res) {
             sendMail(newUser, 'new_contact', {});
             res.status(201).json({ id });
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUser = function getUser(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.user.getUser(id)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.patchUser = function patchUser(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.user.updateUser(id, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listUsers = function listUsers(req, res) {
@@ -38,7 +38,7 @@ exports.listUsers = function listUsers(req, res) {
     const options = role ? { role } : {};
     req.models.user.listUsers(options)
         .then(users => res.status(200).json(users))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.showCurrentUser = function showCurrentUser(req, res) {
@@ -49,11 +49,11 @@ exports.showCurrentUser = function showCurrentUser(req, res) {
 exports.updateCurrentUser = function updateCurrentUser(req, res) {
     req.models.user.updateUser(req.user.id, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.resetPassword = function resetPassword(req, res) {
     req.models.user.resetPassword(req.body.token, req.body.password)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

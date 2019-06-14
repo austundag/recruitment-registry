@@ -7,7 +7,7 @@ const shared = require('./shared.js');
 const jsonSchema = require('../lib/json-schema');
 
 exports.createQuestion = function createQuestion(req, res) {
-    if (!jsonSchema('newQuestion', req.body, res)) {
+    if (!jsonSchema('newQuestion', req, res)) {
         return;
     }
     const question = _.omit(req.body, 'parentId');
@@ -15,11 +15,11 @@ exports.createQuestion = function createQuestion(req, res) {
     if (parentId) {
         req.models.question.replaceQuestion(parentId, question)
             .then(result => res.status(201).json(result))
-            .catch(shared.handleError(res));
+            .catch(shared.handleError(req, res));
     } else {
         req.models.question.createQuestion(question)
             .then(({ id }) => res.status(201).json({ id }))
-            .catch(shared.handleError(res));
+            .catch(shared.handleError(req, res));
     }
 };
 
@@ -27,14 +27,14 @@ exports.updateQuestionText = function updateQuestionText(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.question.updateQuestionText(req.body, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteQuestion = function deleteQuestion(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.question.deleteQuestion(id)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getQuestion = function getQuestion(req, res) {
@@ -47,7 +47,7 @@ exports.getQuestion = function getQuestion(req, res) {
     }
     req.models.question.getQuestion(id, options)
         .then(question => res.status(200).json(question))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listQuestions = function listQuestions(req, res) {
@@ -69,14 +69,14 @@ exports.listQuestions = function listQuestions(req, res) {
     };
     req.models.question.listQuestions(options)
         .then(questions => res.status(200).json(questions))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.addQuestionIdentifiers = function addQuestionIdentifiers(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.question.addQuestionIdentifiers(id, req.body)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.exportQuestions = function exportQuestions(req, res) {
@@ -86,7 +86,7 @@ exports.exportQuestions = function exportQuestions(req, res) {
             res.type('text/csv');
             res.status(200).send(csvContent);
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.importQuestions = function importQuestions(req, res) {
@@ -94,5 +94,5 @@ exports.importQuestions = function importQuestions(req, res) {
     const stream = intoStream(csvFile.buffer);
     req.models.question.importQuestions(stream)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

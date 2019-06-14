@@ -9,5 +9,5 @@ const query = 'SELECT COUNT(*) as count FROM question WHERE multiple = TRUE';
 exports.getMultiCount = function getMultiCount(req, res) {
     req.models.question.selectQuery(query)
         .then(([result]) => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

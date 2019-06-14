@@ -14,7 +14,7 @@ exports.listUserConsentDocuments = function listUserConsentDocuments(req, res) {
     };
     req.models.userConsentDocument.listUserConsentDocuments(userId, options)
         .then(consentDocuments => res.status(200).json(consentDocuments))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserConsentDocument = function getUserConsentDocument(req, res) {
@@ -22,7 +22,7 @@ exports.getUserConsentDocument = function getUserConsentDocument(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.userConsentDocument.getUserConsentDocument(req.user.id, id, { language })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserConsentDocumentByTypeId = function getUserConsentDocumentByTypeId(req, res) {
@@ -31,5 +31,5 @@ exports.getUserConsentDocumentByTypeId = function getUserConsentDocumentByTypeId
     const language = _.get(req, 'swagger.params.language.value');
     req.models.userConsentDocument.getUserConsentDocumentByTypeId(userId, typeId, { language })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

@@ -18,14 +18,14 @@ exports.createCohort = function createCohort(req, res) {
             return smtpHelper.sendS3LinkEmail(models, email, language, link).then(() => s3Data);
         })
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getCohort = function getCohort(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.cohort.getCohort(id)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.patchCohort = function patchCohort(req, res) {
@@ -40,18 +40,18 @@ exports.patchCohort = function patchCohort(req, res) {
             return smtpHelper.sendS3LinkEmail(models, email, language, link).then(() => s3Data);
         })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteCohort = function deleteCohort(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.cohort.deleteCohort(id)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listCohorts = function listCohorts(req, res) {
     req.models.cohort.listCohorts()
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

@@ -10,7 +10,7 @@ exports.createAnswers = function createAnswers(req, res) {
     answers.userId = req.user.id;
     req.models.answer.createAnswers(answers)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getAnswers = function getAnswers(req, res) {
@@ -19,7 +19,7 @@ exports.getAnswers = function getAnswers(req, res) {
     const isIdentifying = true; // True Because you can only pull answers for yourself
     req.models.answer.getAnswers({ userId, surveyId, isIdentifying })
         .then(answers => res.status(200).json(answers))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.exportAnswers = function exportAnswers(req, res) {
@@ -30,7 +30,7 @@ exports.exportAnswers = function exportAnswers(req, res) {
             res.type('text/csv');
             res.status(200).send(csvContent);
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.exportMultiUserAnswers = function exportMultiUserAnswers(req, res) {
@@ -41,7 +41,7 @@ exports.exportMultiUserAnswers = function exportMultiUserAnswers(req, res) {
             res.type('text/csv');
             res.status(200).send(csvContent);
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.importAnswers = function importAnswers(req, res) {
@@ -55,7 +55,7 @@ exports.importAnswers = function importAnswers(req, res) {
     const maps = { userId, surveyIdMap, questionIdMap };
     req.models.answer.importAnswers(stream, maps)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.importMultiUserAnswers = function importMultiUserAnswers(req, res) {
@@ -70,14 +70,14 @@ exports.importMultiUserAnswers = function importMultiUserAnswers(req, res) {
     const maps = { userIdMap, surveyIdMap, questionIdMap };
     req.models.answer.importAnswers(stream, maps)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listAnswersExport = function listAnswersExport(req, res) {
     const userId = req.user.id;
     req.models.answer.listAnswers({ scope: 'export', userId })
         .then(answers => res.status(200).json(answers))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listAnswersMultiUserExport = function listAnswersMultiUserExport(req, res) {
@@ -85,7 +85,7 @@ exports.listAnswersMultiUserExport = function listAnswersMultiUserExport(req, re
     const isIdentifying = _.get(req, 'swagger.params.isIdentifying.value');
     req.models.answer.listAnswers({ scope: 'export', userIds, isIdentifying })
         .then(answers => res.status(200).json(answers))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.searchAnswers = function searchAnswers(req, res) {
@@ -93,28 +93,28 @@ exports.searchAnswers = function searchAnswers(req, res) {
     const allModels = req.app.locals.models;
     req.models.answer.countParticipants(query, allModels)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.countParticipantsIdentifiers = function countParticipantsIdentifiers(req, res) {
     const query = _.get(req, 'swagger.params.query.value');
     req.models.answer.countParticipantsIdentifiers(query)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.searchParticipants = function searchParticipants(req, res) {
     const query = _.get(req, 'swagger.params.query.value');
     req.models.answer.searchParticipants(query)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.searchParticipantsIdentifiers = function searchParticipantsIdentifiers(req, res) {
     const query = _.get(req, 'swagger.params.query.value');
     req.models.answer.searchParticipantsIdentifiers(query)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.federatedSearchAnswers = function federatedSearchAnswers(req, res) {
@@ -122,12 +122,12 @@ exports.federatedSearchAnswers = function federatedSearchAnswers(req, res) {
     const allModels = req.app.locals.models;
     req.models.answer.federatedCountParticipants(allModels, query)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.federatedListAnswers = function federatedListAnswers(req, res) {
     const query = _.get(req, 'swagger.params.query.value');
     req.models.answer.federatedListAnswers(query)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

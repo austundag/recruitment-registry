@@ -15,18 +15,18 @@ exports.createProfile = function createProfile(req, res) {
             res.cookie('rr-jwt-token', token, { httpOnly: true });
             res.status(201).json({ id: record.id });
         })
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.updateProfile = function updateProfile(req, res) {
     const { user, answers, language } = req.body;
     req.models.profile.updateProfile(req.user.id, { user, answers }, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getProfile = function getProfile(req, res) {
     req.models.profile.getProfile({ userId: req.user.id })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

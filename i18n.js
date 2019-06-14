@@ -1,25 +1,36 @@
 'use strict';
 
-const path = require('path');
-const i18n = require('i18n');
+const i18next = require('i18next');
+const Backend = require('i18next-node-fs-backend');
+const middleware = require('i18next-express-middleware');
 
 const logger = require('./logger');
 
-i18n.configure({
-    directory: path.join(__dirname, 'locales'),
-    locales: ['en', 'es', 'fr', 'jp', 'ru'],
-    defaultLocale: 'en',
-    queryParameter: 'language',
-    updateFiles: false,
-    logDebugFn(msg) {
-        logger.log('debug', msg);
+const loggerPlugin = {
+    type: 'logger',
+    log(args) {
+        logger.log('debug', args);
     },
-    logWarnFn(msg) {
-        logger.log('warn', msg);
+    warn(args) {
+        logger.log('warn', args);
     },
-    logErrorFn(msg) {
-        logger.log('error', msg);
+    error(args) {
+        logger.log('error', args);
+    },
+};
+
+i18next.use(Backend).use(middleware.LanguageDetector).use(loggerPlugin).init({
+    initImmediate: false,
+    fallbackLng: 'en',
+    backend: {
+        loadPath: 'locales/{{lng}}_{{ns}}.json',
+    },
+    detection: {
+        order: ['querystring', 'header'],
+        lookupQuerystring: 'language',
+        lookupHeader: 'accept-language',
+        caches: false,
     },
 });
 
-module.exports = i18n;
+module.exports = i18next;

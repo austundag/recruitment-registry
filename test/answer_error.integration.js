@@ -16,7 +16,7 @@ const SurveyHistory = require('./util/survey-history');
 const surveyCommon = require('./util/survey-common');
 const example = require('./fixtures/example/survey');
 
-describe('answer integration', () => {
+describe('answer error integration', () => {
     const generator = new Generator();
     const rrSuperTest = new RRSuperTest();
     const shared = new SharedIntegration(rrSuperTest, generator);

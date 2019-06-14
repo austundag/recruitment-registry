@@ -77,10 +77,9 @@ describe('survey consent integration', function surveyConsentIntegration() {
         it(`get survey ${i}`, surveyTests.getSurveyFn(i));
     });
 
-    xit('error: get profile survey with no consent documents of existing types', (done) => {
-        rrSuperTest.get('/profile-survey', false, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'noSystemConsentDocuments'))
-            .end(done);
+    xit('error: get profile survey with no consent documents of existing types', () => {
+        return rrSuperTest.get('/profile-survey', false, 400)
+            .then(res => shared.verifyErrorMessage(res, 'noSystemConsentDocuments'));
     });
 
     _.range(typeCount).forEach((i) => {
@@ -194,14 +193,13 @@ describe('survey consent integration', function surveyConsentIntegration() {
 
     it('list consent documents with surveys', listConsentDocumentsSurveyFn());
 
-    it('error: require consent type with inconsistent consent', (done) => {
+    it('error: require consent type with inconsistent consent', () => {
         const consentTypeId = hxConsentDocument.typeId(0);
         const surveyId = hxSurvey.id(5);
         const consentId = hxConsent.id(0);
         const surveyConsent = { surveyId, consentId, consentTypeId, action: 'read' };
-        rrSuperTest.post('/survey-consents', surveyConsent, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'surveyConsentInvalidTypeForConsent'))
-            .end(done);
+        return rrSuperTest.post('/survey-consents', surveyConsent, 400)
+            .then(res => shared.verifyErrorMessage(res, 'surveyConsentInvalidTypeForConsent'));
     });
 
     [4, 5, 6].forEach((index) => {
@@ -262,7 +260,7 @@ describe('survey consent integration', function surveyConsentIntegration() {
     it('logout as super', shared.logoutFn());
 
     const createProfileWithoutSignaturesFn = function (index, signIndices, documentIndices) {
-        return function createProfileWithoutSignatures(done) {
+        return function createProfileWithoutSignatures() {
             const profileSurvey = hxSurvey.server(0);
             const answers = generator.answerQuestions(profileSurvey.questions);
             const response = {
@@ -273,13 +271,12 @@ describe('survey consent integration', function surveyConsentIntegration() {
                 const signatures = signIndices.map(signIndex => hxConsentDocument.id(signIndex));
                 Object.assign(response, { signatures });
             }
-            rrSuperTest.authPost('/profiles', response, 400)
-                .expect((res) => {
-                    shared.verifyErrorMessage(res, 'profileSignaturesMissing');
-                    const expected = hxConsentDocument.serversInList(documentIndices);
-                    comparator.consentDocuments(expected, res.body.consentDocuments);
-                })
-                .end(done);
+            return rrSuperTest.authPost('/profiles', response, 400)
+                .then(res => shared.verifyErrorMessage(res, 'profileSignaturesMissing')
+                    .then(() => {
+                        const expected = hxConsentDocument.serversInList(documentIndices);
+                        comparator.consentDocuments(expected, res.body.consentDocuments);
+                    }));
         };
     };
 
@@ -322,14 +319,13 @@ describe('survey consent integration', function surveyConsentIntegration() {
     };
 
     const readProfileWithoutSignaturesFn = function (index, documentIndices) {
-        return function readProfileWithoutSignature(done) {
-            rrSuperTest.get('/profiles', true, 400)
-                .expect((res) => {
-                    shared.verifyErrorMessage(res, 'profileSignaturesMissing');
-                    const expected = hxConsentDocument.serversInList(documentIndices);
-                    comparator.consentDocuments(expected, res.body.consentDocuments);
-                })
-                .end(done);
+        return function readProfileWithoutSignature() {
+            return rrSuperTest.get('/profiles', true, 400)
+                .then(res => shared.verifyErrorMessage(res, 'profileSignaturesMissing')
+                    .then(() => {
+                        const expected = hxConsentDocument.serversInList(documentIndices);
+                        comparator.consentDocuments(expected, res.body.consentDocuments);
+                    }));
         };
     };
 
@@ -380,20 +376,19 @@ describe('survey consent integration', function surveyConsentIntegration() {
     it('logout as user 3', shared.logoutFn());
 
     const answerSurveyWithoutSignaturesFn = function (userIndex, surveyIndex, expectedInfo) {
-        return function answerSurveyWithoutSignatures(done) {
+        return function answerSurveyWithoutSignatures() {
             const survey = hxSurvey.server(surveyIndex);
             const answers = generator.answerQuestions(survey.questions);
             const input = {
                 surveyId: survey.id,
                 answers,
             };
-            rrSuperTest.post('/answers', input, 400)
-                .expect((res) => {
-                    shared.verifyErrorMessage(res, 'profileSignaturesMissing');
-                    const expected = consentTests.getSurveyConsentDocuments(expectedInfo);
-                    comparator.consentDocuments(expected, res.body.consentDocuments);
-                })
-                .end(done);
+            return rrSuperTest.post('/answers', input, 400)
+                .then(res => shared.verifyErrorMessage(res, 'profileSignaturesMissing')
+                    .then(() => {
+                        const expected = consentTests.getSurveyConsentDocuments(expectedInfo);
+                        comparator.consentDocuments(expected, res.body.consentDocuments);
+                    }));
         };
     };
 
@@ -671,15 +666,14 @@ describe('survey consent integration', function surveyConsentIntegration() {
     it('logout as user 1', shared.logoutFn());
 
     const getAnswersWithoutSignaturesFn = function (userIndex, surveyIndex, expectedInfo) {
-        return function getAnswersWithoutSignatures(done) {
+        return function getAnswersWithoutSignatures() {
             const survey = hxSurvey.server(surveyIndex);
-            rrSuperTest.get(`/answered-surveys/${survey.id}`, true, 400)
-                .expect((res) => {
-                    shared.verifyErrorMessage(res, 'profileSignaturesMissing');
-                    const expected = consentTests.getSurveyConsentDocuments(expectedInfo);
-                    comparator.consentDocuments(expected, res.body.consentDocuments);
-                })
-                .end(done);
+            return rrSuperTest.get(`/answered-surveys/${survey.id}`, true, 400)
+                .then(res => shared.verifyErrorMessage(res, 'profileSignaturesMissing')
+                    .then(() => {
+                        const expected = consentTests.getSurveyConsentDocuments(expectedInfo);
+                        comparator.consentDocuments(expected, res.body.consentDocuments);
+                    }));
         };
     };
 

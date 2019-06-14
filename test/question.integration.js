@@ -60,11 +60,10 @@ describe('question integration', () => {
     it('login as super', shared.loginFn(config.superUser));
 
     const invalidQuestionJSONFn = function (index) {
-        return function invalidQuestionJSON(done) {
+        return function invalidQuestionJSON() {
             const question = invalidQuestionsJSON[index];
-            rrSuperTest.post('/questions', question, 400)
-                .expect(res => shared.verifyErrorMessage(res, 'jsonSchemaFailed', 'newQuestion'))
-                .end(done);
+            return rrSuperTest.post('/questions', question, 400)
+                .then(res => shared.verifyErrorMessage(res, 'jsonSchemaFailed', 'newQuestion'));
         };
     };
 
@@ -104,12 +103,12 @@ describe('question integration', () => {
 
     it('error: get with non-existent id', function getNonExistant() {
         return rrSuperTest.get('/questions/9999', true, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'qxNotFound'));
+            .then(res => shared.verifyErrorMessage(res, 'qxNotFound'));
     });
 
     it('error: get with non-existent id in spanish', function getNonExistantSpanish() {
         return rrSuperTest.get('/questions/9999', true, 400, { language: 'es' })
-            .expect(res => shared.verifyErrorMessageLang(res, 'es', 'qxNotFound'));
+            .then(res => shared.verifyErrorMessageLang(res, 'es', 'qxNotFound'));
     });
 
     const updateQxFn = function (index) {
@@ -282,11 +281,10 @@ describe('question integration', () => {
     });
 
     const deleteQuestionWhenOnSurveyFn = function (index) {
-        return function deleteQuestionWhenOnSurvey(done) {
+        return function deleteQuestionWhenOnSurvey() {
             const id = hxQuestion.id(index);
-            rrSuperTest.delete(`/questions/${id}`, 400)
-                .expect(res => shared.verifyErrorMessage(res, 'qxReplaceWhenActiveSurveys'))
-                .end(done);
+            return rrSuperTest.delete(`/questions/${id}`, 400)
+                .then(res => shared.verifyErrorMessage(res, 'qxReplaceWhenActiveSurveys'));
         };
     };
 
@@ -321,12 +319,11 @@ describe('question integration', () => {
         it(`delete question ${index}`, tests.deleteQuestionFn(index));
     });
 
-    it('error: replace a non-existent question', (done) => {
+    it('error: replace a non-existent question', () => {
         const replacement = generator.newQuestion();
         replacement.parentId = 999;
-        rrSuperTest.post('/questions', replacement, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'qxNotFound'))
-            .end(done);
+        return rrSuperTest.post('/questions', replacement, 400)
+            .then(res => shared.verifyErrorMessage(res, 'qxNotFound'));
     });
 
     [
@@ -337,13 +334,12 @@ describe('question integration', () => {
     });
 
     const replaceQxOnSurvey = function (questionIndex) {
-        return function replaceQxOnS(done) {
+        return function replaceQxOnS() {
             const replacement = generator.newQuestion();
             const parentId = hxQuestion.id(questionIndex);
             replacement.parentId = parentId;
-            rrSuperTest.post('/questions', replacement, 400)
-                .expect(res => shared.verifyErrorMessage(res, 'qxReplaceWhenActiveSurveys'))
-                .end(done);
+            return rrSuperTest.post('/questions', replacement, 400)
+                .then(res => shared.verifyErrorMessage(res, 'qxReplaceWhenActiveSurveys'));
         };
     };
 

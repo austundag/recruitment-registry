@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node --harmony index.js",
-    "test": "NODE_ENV=test ./node_modules/mocha/bin/_mocha -t 10000 --exit test/*.js test/use-cases/*.js test/import-export/*.js",
+    "test": "NODE_ENV=test ./node_modules/mocha/bin/_mocha -t 10000 --exit --bail test/*.js test/use-cases/*.js test/import-export/*.js",
     "beautify": "esw *.js app report-test --color --fix",
     "coverage": "NODE_ENV=test istanbul cover --report cobertura ./node_modules/mocha/bin/_mocha -- -R spec --recursive -t 10000"
   },
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/amida-tech/recruitment-registry.git"
   },
   "author": "Amida",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/amida-tech/recruitment-registry/issues"
   },
@@ -29,7 +29,9 @@
     "dotenv": "^2.0.0",
     "express": "^4.14.0",
     "express-winston": "^2.0.0",
-    "i18n": "^0.8.3",
+    "i18next": "^17.0.3",
+    "i18next-express-middleware": "^1.8.0",
+    "i18next-node-fs-backend": "^2.1.3",
     "into-stream": "^3.1.0",
     "json2csv": "^3.7.2",
     "jsonwebtoken": "^7.1.9",

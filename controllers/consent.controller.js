@@ -8,34 +8,34 @@ exports.createConsent = function createConsent(req, res) {
     const consent = req.body;
     req.models.consent.createConsent(consent)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.deleteConsent = function deleteConsent(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.consent.deleteConsent(id)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsent = function getConsent(req, res) {
     const id = _.get(req, 'swagger.params.id.value');
     req.models.consent.getConsent(id)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsentByName = function getConsentByName(req, res) {
     const name = _.get(req, 'swagger.params.name.value');
     req.models.consent.getConsentByName(name)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listConsents = function listConsents(req, res) {
     req.models.consent.listConsents()
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsentDocuments = function getConsentDocuments(req, res) {
@@ -47,7 +47,7 @@ exports.getConsentDocuments = function getConsentDocuments(req, res) {
     };
     req.models.consent.getConsentDocuments(id, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsentDocumentsByName = function getConsentDocumentsByName(req, res) {
@@ -59,7 +59,7 @@ exports.getConsentDocumentsByName = function getConsentDocumentsByName(req, res)
     };
     req.models.consent.getConsentDocumentsByName(name, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserConsentDocuments = function getUserConsentDocuments(req, res) {
@@ -72,7 +72,7 @@ exports.getUserConsentDocuments = function getUserConsentDocuments(req, res) {
     };
     req.models.consent.getUserConsentDocuments(userId, id, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUserConsentDocumentsByName = function getUserConsentDocumentsByName(req, res) {
@@ -85,5 +85,5 @@ exports.getUserConsentDocumentsByName = function getUserConsentDocumentsByName(r
     };
     req.models.consent.getUserConsentDocumentsByName(userId, name, options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

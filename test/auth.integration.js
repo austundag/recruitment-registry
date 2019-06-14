@@ -62,7 +62,7 @@ describe('auth integration', () => {
     };
 
     const wrongUsernameFn = function (index) {
-        return function wrongUsername(done) {
+        return function wrongUsername() {
             const client = hxUser.client(index);
             let username = client.username;
             const email = client.email;
@@ -71,14 +71,13 @@ describe('auth integration', () => {
                 username = email;
             }
             username += `u${username}`;
-            rrSuperTest.authBasic({ username, password }, 401)
-                .expect(res => shared.verifyErrorMessage(res, 'authenticationError'))
-                .end(done);
+            return rrSuperTest.authBasic({ username, password }, 401)
+                .then(res => shared.verifyErrorMessage(res, 'authenticationError'));
         };
     };
 
     const wrongPasswordFn = function (index) {
-        return function wrongPassword(done) {
+        return function wrongPassword() {
             const client = hxUser.client(index);
             let username = client.username;
             const email = client.email;
@@ -87,9 +86,8 @@ describe('auth integration', () => {
                 username = email;
             }
             password += 'a';
-            rrSuperTest.authBasic({ username, password }, 401)
-                .expect(res => shared.verifyErrorMessage(res, 'authenticationError'))
-                .end(done);
+            return rrSuperTest.authBasic({ username, password }, 401)
+                .then(res => shared.verifyErrorMessage(res, 'authenticationError'));
         };
     };
 

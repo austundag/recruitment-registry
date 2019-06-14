@@ -7,7 +7,7 @@ const shared = require('./shared.js');
 exports.createConsentDocument = function createConsentDocument(req, res) {
     req.models.consentDocument.createConsentDocument(req.body)
         .then(result => res.status(201).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsentDocument = function getConsentDocument(req, res) {
@@ -15,7 +15,7 @@ exports.getConsentDocument = function getConsentDocument(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.consentDocument.getConsentDocument(id, { language })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getConsentDocumentByTypeId = function getConsentDocumentByTypeId(req, res) {
@@ -23,14 +23,14 @@ exports.getConsentDocumentByTypeId = function getConsentDocumentByTypeId(req, re
     const language = _.get(req, 'swagger.params.language.value');
     req.models.consentDocument.getConsentDocumentByTypeId(typeId, { language })
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.updateConsentDocumentText = function updateConsentDocumentText(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.consentDocument.updateConsentDocumentText(req.body, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.getUpdateCommentHistory = function getUpdateCommentHistory(req, res) {
@@ -38,7 +38,7 @@ exports.getUpdateCommentHistory = function getUpdateCommentHistory(req, res) {
     const language = _.get(req, 'swagger.params.language.value');
     req.models.consentDocument.getUpdateCommentHistory(typeId, language)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };
 
 exports.listConsentDocuments = function listConsentDocuments(req, res) {
@@ -54,5 +54,5 @@ exports.listConsentDocuments = function listConsentDocuments(req, res) {
     };
     req.models.consentDocument.listConsentDocuments(options)
         .then(result => res.status(200).json(result))
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

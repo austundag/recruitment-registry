@@ -9,5 +9,5 @@ exports.resetToken = function resetTokenFunction(req, res) {
     const language = req.body.language;
     smtpHelper.resetToken(req.models, email, language)
         .then(() => res.status(204).end())
-        .catch(shared.handleError(res));
+        .catch(shared.handleError(req, res));
 };

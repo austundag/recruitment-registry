@@ -18,6 +18,7 @@ const security = require('./security');
 const logger = require('./logger');
 const jsutil = require('./lib/jsutil');
 const i18n = require('./i18n');
+const i18nMiddleware = require('i18next-express-middleware');
 
 const errHandler = function (err, req, res, next) { // eslint-disable-line no-unused-vars
     logger.error(err);
@@ -96,7 +97,7 @@ exports.initialize = function initialize(app, options, callback) {
     const schema = exports.extractSchema(effectiveConfig.db.schema);
     const effSwaggerJson = options.swaggerJson || swaggerJson;
     const swaggerObject = formSwaggerObject(schema, effectiveConfig, effSwaggerJson);
-    app.use(i18n.init);
+    app.use(i18nMiddleware.handle(i18n));
     swaggerTools.initializeMiddleware(swaggerObject, (middleware) => {
         app.use(middleware.swaggerMetadata());
 

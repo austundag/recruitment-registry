@@ -32,13 +32,13 @@ const transformSequelizeError = function transformSequelizeError(err) {
     return err;
 };
 
-exports.errToJSON = function errToJSON(err, res) {
+exports.errToJSON = function errToJSON(err, i18n) {
     let localErr = err;
     if (localErr instanceof Sequelize.Error) {
         localErr = transformSequelizeError(err);
     }
     if (localErr instanceof RRError) {
-        const message = localErr.getMessage(res);
+        const message = localErr.getMessage(i18n);
         const json = jsutil.errToJSON(localErr);
         json.message = message;
         return json;
@@ -46,9 +46,9 @@ exports.errToJSON = function errToJSON(err, res) {
     return jsutil.errToJSON(localErr);
 };
 
-exports.handleError = function handleErrorFn(res) {
+exports.handleError = function handleErrorFn(req, res) {
     return function handleError(err) {
-        const json = exports.errToJSON(err, res);
+        const json = exports.errToJSON(err, req.i18n);
         if (err instanceof RRError) {
             const statusCode = err.statusCode || 400;
             return res.status(statusCode).json(json);

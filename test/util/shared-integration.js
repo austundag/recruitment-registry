@@ -223,11 +223,11 @@ class SharedIntegration {
     }
 
     verifyErrorMessage(res, code, ...params) { // eslint-disable-line class-methods-use-this
-        errHandler.verifyErrorMessage(res, code, ...params);
+        return errHandler.verifyErrorMessage(res, code, ...params);
     }
 
     verifyErrorMessageLang(res, language, code, ...params) { // eslint-disable-line class-methods-use-this
-        errHandler.verifyErrorMessageLang(res, language, code, ...params);
+        return errHandler.verifyErrorMessageLang(res, language, code, ...params);
     }
 }
 

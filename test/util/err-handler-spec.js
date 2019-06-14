@@ -34,23 +34,19 @@ const expectedSeqErrorHandlerFn = function (name, fields) {
     };
 };
 
-const verifyErrorMessage = function (res, code, ...params) {
-    const req = {};
-    const response = {};
-    i18n.init(req, response);
-    const expected = (new RRError(code, ...params)).getMessage(response);
+const verifyErrorMessage = async function (res, code, ...params) {
+    await i18n.changeLanguage('en');
+    const expected = (new RRError(code, ...params)).getMessage(i18n);
     expect(expected).to.not.equal(code);
-    expect(expected).to.not.equal(unknownError.getMessage(response));
+    expect(expected).to.not.equal(unknownError.getMessage(i18n));
     expect(res.body.message).to.equal(expected);
 };
 
-const verifyErrorMessageLang = function (res, language, code, ...params) {
-    const req = { url: `http://aaa.com/anything?language=${language}` };
-    const response = {};
-    i18n.init(req, response);
-    const expected = (new RRError(code, ...params)).getMessage(response);
+const verifyErrorMessageLang = async function (res, language, code, ...params) {
+    await i18n.changeLanguage(language);
+    const expected = (new RRError(code, ...params)).getMessage(i18n);
     expect(expected).to.not.equal(code);
-    expect(expected).to.not.equal(unknownError.getMessage(response));
+    expect(expected).to.not.equal(unknownError.getMessage(i18n));
     expect(res.body.message).to.equal(expected);
 };
 

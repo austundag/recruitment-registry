@@ -205,7 +205,7 @@ describe('user survey integration', () => {
     };
 
     const answerSurveyPartialCompletedFn = function (userIndex, surveyIndex) {
-        return function answerSurveyPartialCompleted(done) {
+        return function answerSurveyPartialCompleted() {
             const survey = hxSurvey.server(surveyIndex);
             const requiredQuestions = survey.questions.filter(question => question.required);
             expect(requiredQuestions).to.have.length.above(0);
@@ -215,9 +215,8 @@ describe('user survey integration', () => {
                 answers,
                 status: 'completed',
             };
-            rrSuperTest.post(`/user-surveys/${survey.id}/answers`, input, 400)
-                .expect(res => shared.verifyErrorMessage(res, 'answerRequiredMissing'))
-                .end(done);
+            return rrSuperTest.post(`/user-surveys/${survey.id}/answers`, input, 400)
+                .then(res => shared.verifyErrorMessage(res, 'answerRequiredMissing'));
         };
     };
 

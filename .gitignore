@@ -32,3 +32,5 @@ tmp/*
 
 # Static Code Analysis
 /artifacts
+
+.vscode/*

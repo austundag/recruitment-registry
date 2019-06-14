@@ -54,7 +54,7 @@ describe('registry integration', function registryIntegration() {
         const name = hxRegistry.server(1).name;
         registry.name = name;
         return rrSuperTest.post('/registries', registry, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'genericUnique', 'name', name));
+            .then(res => shared.verifyErrorMessage(res, 'genericUnique', 'name', name));
     });
 
     it('error: create registry with same url', function errorSameUrl() {
@@ -62,7 +62,7 @@ describe('registry integration', function registryIntegration() {
         const url = hxRegistry.server(1).url || hxRegistry.server(2).url;
         registry.url = url;
         return rrSuperTest.post('/registries', registry, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'genericUnique', 'url', url));
+            .then(res => shared.verifyErrorMessage(res, 'genericUnique', 'url', url));
     });
 
     it('error: create registry with same schema', function errorSameSchema() {
@@ -70,7 +70,7 @@ describe('registry integration', function registryIntegration() {
         const schema = hxRegistry.server(1).schema || hxRegistry.server(2).schema;
         registry.schema = schema;
         return rrSuperTest.post('/registries', registry, 400)
-            .expect(res => shared.verifyErrorMessage(res, 'genericUnique', 'schema', schema));
+            .then(res => shared.verifyErrorMessage(res, 'genericUnique', 'schema', schema));
     });
 
     [1, 2, 5].forEach((index) => {
